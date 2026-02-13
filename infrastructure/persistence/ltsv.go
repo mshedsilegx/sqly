@@ -62,7 +62,7 @@ func (lr *ltsvRepository) Dump(f *os.File, table *model.Table) error {
 	w := csv.NewWriter(f)
 	w.Comma = '\t'
 
-	records := [][]string{}
+	records := make([][]string, 0, len(table.Records()))
 	for _, v := range table.Records() {
 		r := model.Record{}
 		for i, data := range v {

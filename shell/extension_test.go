@@ -699,7 +699,7 @@ func TestValidatePath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Skip Unix-specific system directory tests on Windows
-			if runtime.GOOS == "windows" && strings.Contains(tt.name, "(Unix only)") {
+			if runtime.GOOS == goosWindows && strings.Contains(tt.name, "(Unix only)") {
 				t.Skip("Skipping Unix-specific test on Windows")
 			}
 

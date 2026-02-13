@@ -9,6 +9,11 @@ import (
 	"runtime"
 )
 
+const (
+	// goosWindows is the string used for runtime.GOOS on Windows.
+	goosWindows = "windows"
+)
+
 // lsCommand list files and directories.
 // If there is no argument, list the files and directories in the current directory.
 // If there is one argument, list the files and directories in the specified directory.
@@ -33,10 +38,10 @@ func (c CommandList) lsCommand(_ context.Context, _ *Shell, argv []string) error
 		}
 
 		var cmd *exec.Cmd
-		if runtime.GOOS == "windows" {
-			cmd = exec.CommandContext(context.Background(), "cmd", "/c", "dir", "/q", path) //nolint:gosec // Controlled command for ls functionality
+		if runtime.GOOS == goosWindows {
+			cmd = exec.CommandContext(context.Background(), "cmd", "/c", "dir", "/q", path) // #nosec G204
 		} else {
-			cmd = exec.CommandContext(context.Background(), "ls", "-l", path) //nolint:gosec // Controlled command for ls functionality
+			cmd = exec.CommandContext(context.Background(), "ls", "-l", path) // #nosec G204
 		}
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr

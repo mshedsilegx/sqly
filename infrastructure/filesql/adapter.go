@@ -86,7 +86,7 @@ func (f *FileSQLAdapter) LoadFile(ctx context.Context, filePath string) error {
 // copyTableToSharedDB copies a table from source database to shared database using bulk insert optimization
 func (f *FileSQLAdapter) copyTableToSharedDB(ctx context.Context, sourceDB *sql.DB, tableName string) error {
 	// Drop existing table if it exists to avoid conflicts
-	dropSQL := "DROP TABLE IF EXISTS " + quoteIdentifier(tableName)
+	dropSQL := "DROP TABLE IF EXISTS " + quoteIdentifier(tableName) // #nosec G202
 	if _, err := f.sharedDB.ExecContext(ctx, dropSQL); err != nil {
 		return fmt.Errorf("failed to drop existing table %s: %w", tableName, err)
 	}
@@ -156,7 +156,7 @@ func (f *FileSQLAdapter) copyTableManually(ctx context.Context, sourceDB *sql.DB
 	defer tx.Rollback() // Will be no-op if tx.Commit() succeeds
 
 	// Copy data from source to shared database
-	selectSQL := fmt.Sprintf("SELECT %s FROM %s", strings.Join(quotedColumns, ", "), quotedTableName) //nolint:gosec // Table name is controlled by filesql, columns are validated
+	selectSQL := fmt.Sprintf("SELECT %s FROM %s", strings.Join(quotedColumns, ", "), quotedTableName) // #nosec G201
 	sourceRows, err := sourceDB.QueryContext(ctx, selectSQL)
 	if err != nil {
 		return err
@@ -168,7 +168,7 @@ func (f *FileSQLAdapter) copyTableManually(ctx context.Context, sourceDB *sql.DB
 	for i := range placeholders {
 		placeholders[i] = "?"
 	}
-	insertSQL := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", //nolint:gosec // Table and column names are controlled by filesql, placeholders are safe
+	insertSQL := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", // #nosec G201
 		quotedTableName, strings.Join(quotedColumns, ", "), strings.Join(placeholders, ", "))
 	stmt, err := tx.PrepareContext(ctx, insertSQL)
 	if err != nil {
@@ -359,7 +359,7 @@ func (f *FileSQLAdapter) GetTableHeader(ctx context.Context, tableName string) (
 	}
 
 	// Get column info using PRAGMA
-	query := "PRAGMA table_info(" + quoteIdentifier(tableName) + ")"
+	query := "PRAGMA table_info(" + quoteIdentifier(tableName) + ")" // #nosec G202
 	rows, err := f.sharedDB.QueryContext(ctx, query)
 	if err != nil {
 		return nil, &FileSQLError{Op: "get_header", Err: err.Error()}

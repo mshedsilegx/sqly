@@ -168,11 +168,13 @@ func (s *Shell) tryWarmCache(ctx context.Context, cachePath string, sigs []cache
 		return false // manifest without its database
 	}
 	if err := s.usecases.persistence.LoadFromCache(ctx, cachePath); err != nil {
-		fmt.Fprintf(config.Stderr, "cache: load failed (%v); importing from source\n", err)
+		//nolint:errcheck // Ignore error because we are writing a diagnostic warning to stderr.
+		_, _ = fmt.Fprintf(config.Stderr, "cache: load failed (%v); importing from source\n", err)
 		return false
 	}
 	s.restoreFromManifest(ctx, manifest)
-	fmt.Fprintf(config.Stderr, "cache: reused %s\n", cachePath)
+	//nolint:errcheck // Ignore error because we are writing a diagnostic message to stderr.
+	_, _ = fmt.Fprintf(config.Stderr, "cache: reused %s\n", cachePath)
 	return true
 }
 
@@ -207,12 +209,14 @@ func (s *Shell) restoreFromManifest(ctx context.Context, manifest cacheManifest)
 func (s *Shell) writeCache(ctx context.Context, cachePath string, sigs []cacheSource) {
 	if dir := filepath.Dir(cachePath); dir != "" {
 		if err := os.MkdirAll(dir, 0o750); err != nil {
-			fmt.Fprintf(config.Stderr, "cache: cannot create cache directory (%v); not caching\n", err)
+			//nolint:errcheck // Ignore error because we are writing a diagnostic warning to stderr.
+			_, _ = fmt.Fprintf(config.Stderr, "cache: cannot create cache directory (%v); not caching\n", err)
 			return
 		}
 	}
 	if err := s.usecases.persistence.SnapshotToCache(ctx, cachePath); err != nil {
-		fmt.Fprintf(config.Stderr, "cache: write failed (%v); continuing without cache\n", err)
+		//nolint:errcheck // Ignore error because we are writing a diagnostic warning to stderr.
+		_, _ = fmt.Fprintf(config.Stderr, "cache: write failed (%v); continuing without cache\n", err)
 		return
 	}
 	manifest := cacheManifest{

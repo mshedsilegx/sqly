@@ -117,7 +117,8 @@ func (s *Shell) runInspect(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to encode inspect report: %w", err)
 	}
-	fmt.Fprintln(config.Stdout, string(encoded))
+	//nolint:errcheck // Ignore error because writing inspect report to stdout is terminal and SIGPIPE is managed by OS.
+	_, _ = fmt.Fprintln(config.Stdout, string(encoded))
 	return nil
 }
 

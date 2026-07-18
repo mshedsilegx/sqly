@@ -43,7 +43,8 @@ func (c CommandList) lsCommand(_ context.Context, _ *Shell, argv []string) error
 
 	// A non-directory argument lists just that entry, mirroring `ls FILE`.
 	if !info.IsDir() {
-		fmt.Fprintln(config.Stdout, filepath.Base(path))
+		//nolint:errcheck // Ignore error because writing file lists to stdout is terminal-only and benign.
+		_, _ = fmt.Fprintln(config.Stdout, filepath.Base(path))
 		return nil
 	}
 
@@ -61,7 +62,8 @@ func (c CommandList) lsCommand(_ context.Context, _ *Shell, argv []string) error
 	}
 	sort.Strings(names)
 	for _, name := range names {
-		fmt.Fprintln(config.Stdout, name)
+		//nolint:errcheck // Ignore error because writing file lists to stdout is terminal-only and benign.
+		_, _ = fmt.Fprintln(config.Stdout, name)
 	}
 	return nil
 }

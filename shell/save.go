@@ -179,7 +179,8 @@ func (s *Shell) finishNonInteractive(ctx context.Context) error {
 	// The run succeeded (write-back ran, or there was nothing to write back), so
 	// flush the buffered affected counts to stdout now.
 	for _, msg := range s.pendingAffected {
-		fmt.Fprint(config.Stdout, msg)
+		//nolint:errcheck // Ignore error because writing success messages to stdout is terminal-only and benign.
+		_, _ = fmt.Fprint(config.Stdout, msg)
 	}
 	s.pendingAffected = nil
 	return nil

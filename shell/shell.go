@@ -1087,7 +1087,8 @@ func (s *Shell) execSQL(ctx context.Context, req string) error {
 			s.pendingAffected = append(s.pendingAffected, msg)
 			return nil
 		}
-		fmt.Fprint(config.Stdout, msg)
+		//nolint:errcheck // Ignore error because writing statement success message to stdout is terminal-only and benign.
+		_, _ = fmt.Fprint(config.Stdout, msg)
 		return nil
 	}
 

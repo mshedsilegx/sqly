@@ -23,7 +23,7 @@ func TestIssue218LargeIntegerPreserved(t *testing.T) {
 	content := "ctsn,pocode\n" +
 		"11040320260000000000,100031464478\n" +
 		"11040320260000000001,100031464478\n"
-	if err := os.WriteFile(csvPath, []byte(content), 0600); err != nil {
+	if err := os.WriteFile(csvPath, []byte(content), 0o600); err != nil {
 		t.Fatalf("failed to write csv: %v", err)
 	}
 

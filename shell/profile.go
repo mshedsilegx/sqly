@@ -99,14 +99,16 @@ func (s *Shell) runProfile(ctx context.Context) error {
 	}
 
 	if s.argument.ProfileFormat == outputFormatText {
-		fmt.Fprint(config.Stdout, renderProfileText(report))
+		//nolint:errcheck // Ignore error because writing profile report to stdout is terminal and SIGPIPE is managed by OS.
+		_, _ = fmt.Fprint(config.Stdout, renderProfileText(report))
 		return nil
 	}
 	encoded, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to encode profile report: %w", err)
 	}
-	fmt.Fprintln(config.Stdout, string(encoded))
+	//nolint:errcheck // Ignore error because writing profile report to stdout is terminal and SIGPIPE is managed by OS.
+	_, _ = fmt.Fprintln(config.Stdout, string(encoded))
 	return nil
 }
 

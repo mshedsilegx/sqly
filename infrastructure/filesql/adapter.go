@@ -255,7 +255,7 @@ func (f *FileSQLAdapter) SnapshotToCache(ctx context.Context, cachePath string) 
 	// VACUUM INTO takes a string literal, not a bind parameter; the path is
 	// single-quote-escaped via escapeSQLiteLiteral so it cannot break out of the
 	// literal.
-	//nolint:gosec // path is escaped into a SQLite string literal; VACUUM INTO has no parameter form
+	// #nosec G202 // path is escaped into a SQLite string literal; VACUUM INTO has no parameter form
 	if _, err := f.sharedDB.ExecContext(ctx, "VACUUM INTO '"+escapeSQLiteLiteral(cachePath)+"'"); err != nil {
 		return fmt.Errorf("write cache %q: %w", cachePath, err)
 	}

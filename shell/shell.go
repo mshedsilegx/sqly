@@ -641,7 +641,7 @@ func (s *Shell) stageStdinDataset() (string, func(), error) {
 	cleanup := func() { _ = os.RemoveAll(dir) }
 
 	path := filepath.Join(dir, s.argument.StdinTableName+ext)
-	f, err := os.Create(path) //nolint:gosec // path is a sqly-generated temp path
+	f, err := os.Create(path) // #nosec G304 // path is a sqly-generated temp path
 	if err != nil {
 		cleanup()
 		return "", nil, fmt.Errorf("create stdin staging file: %w", err)

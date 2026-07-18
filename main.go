@@ -27,13 +27,15 @@ func main() {
 func run(args []string) int {
 	shell, cleanup, err := di.NewShell(args)
 	if err != nil {
-		fmt.Fprintln(config.Stderr, startupErrorMessage(err))
+		//nolint:errcheck // Ignore error because we are writing to stderr before exiting with error code.
+		_, _ = fmt.Fprintln(config.Stderr, startupErrorMessage(err))
 		return 1
 	}
 	defer cleanup()
 
 	if err := shell.Run(context.Background()); err != nil {
-		fmt.Fprintf(config.Stderr, "%v\n", err)
+		//nolint:errcheck // Ignore error because we are writing to stderr before exiting with error code.
+		_, _ = fmt.Fprintf(config.Stderr, "%v\n", err)
 		return 1
 	}
 	return 0

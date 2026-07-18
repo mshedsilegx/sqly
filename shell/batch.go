@@ -80,7 +80,8 @@ func (s *Shell) runBatchReader(ctx context.Context, r io.Reader) (ranAny bool, e
 			if endLine > startLine {
 				loc = fmt.Sprintf("lines %d-%d", startLine, endLine)
 			}
-			fmt.Fprintf(config.Stderr, "batch statement %d failed at %s: %q: %v\n",
+			//nolint:errcheck // Ignore error because we are writing a diagnostic warning to stderr.
+			_, _ = fmt.Fprintf(config.Stderr, "batch statement %d failed at %s: %q: %v\n",
 				stmtNo, loc, previewStatement(stmt), err)
 			failErr = errors.New("batch stopped: statement failed")
 			return true
@@ -699,7 +700,7 @@ func withMainVerb(stmt string) string {
 // inspect it with errors.Is) and rejects a file with no SQL, so an empty or
 // whitespace-only script fails loudly instead of running nothing.
 func readSQLFile(path string) (string, error) {
-	data, err := os.ReadFile(path) //nolint:gosec // path is the user-specified --sql-file
+	data, err := os.ReadFile(path) // #nosec G304 // path is the user-specified --sql-file
 	if err != nil {
 		return "", fmt.Errorf("failed to read --sql-file %q: %w", path, err)
 	}

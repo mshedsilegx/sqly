@@ -61,13 +61,16 @@ func (c CommandList) helpCommand(_ context.Context, _ *Shell, argv []string) err
 	if len(argv) > 0 {
 		return fmt.Errorf(".help takes no arguments, got %d", len(argv))
 	}
-	fmt.Fprintln(config.Stdout, "sqly helper commands (run inside the shell; SQL needs no leading dot):")
+	//nolint:errcheck // Ignore error because writing help messages to stdout is terminal-only and benign.
+	_, _ = fmt.Fprintln(config.Stdout, "sqly helper commands (run inside the shell; SQL needs no leading dot):")
 	for _, g := range helpGroups() {
-		fmt.Fprintf(config.Stdout, "\n%s\n", g.title)
+		//nolint:errcheck // Ignore error because writing help messages to stdout is terminal-only and benign.
+		_, _ = fmt.Fprintf(config.Stdout, "\n%s\n", g.title)
 		for _, ln := range g.lines {
 			// Pad before coloring so the column stays aligned when color is disabled
 			// (tests, pipes); the trailing spaces sit inside the colored span.
-			fmt.Fprintf(config.Stdout, "  %s %s\n", color.CyanString("%-18s", ln.usage), ln.desc)
+			//nolint:errcheck // Ignore error because writing help messages to stdout is terminal-only and benign.
+			_, _ = fmt.Fprintf(config.Stdout, "  %s %s\n", color.CyanString("%-18s", ln.usage), ln.desc)
 		}
 	}
 	return nil

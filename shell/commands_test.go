@@ -602,7 +602,8 @@ func TestCommandList_headerCommand_dependsOnMetadataUsecase(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	metadata := mock.NewMockMetadataUsecase(ctrl)
 	metadata.EXPECT().Header(gomock.Any(), "users").Return(
-		model.NewTable("users", model.NewHeader([]string{"id", "name"}), nil), nil)
+		model.NewTable("users", model.NewHeader([]string{"id", "name"}), nil), nil,
+	)
 
 	st, err := newState(&config.Arg{Output: &config.Output{Mode: model.PrintModeTable}})
 	if err != nil {

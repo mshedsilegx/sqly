@@ -35,7 +35,7 @@ func (r *sqlite3Repository) CreateTable(ctx context.Context, t *model.Table) err
 	}
 	defer func() { _ = tx.Rollback() }()
 
-	_, err = tx.ExecContext(ctx, infra.GenerateCreateTableStatement((t)))
+	_, err = tx.ExecContext(ctx, infra.GenerateCreateTableStatement(t))
 	if err != nil {
 		return err
 	}

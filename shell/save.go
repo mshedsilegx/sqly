@@ -146,7 +146,8 @@ func (s *Shell) preflightSave(ctx context.Context, script string) error {
 	if stmt := firstSaveIncompatibleStatement(script); stmt != "" {
 		return fmt.Errorf(
 			"--save/--save-dir cannot persist %q: it changes schema or runs a maintenance statement that has no file write-back; only INSERT/UPDATE/DELETE on imported tables are saved",
-			trimGaps(stmt))
+			trimGaps(stmt),
+		)
 	}
 	// A script that imports its own input with .import creates its tables while it
 	// runs, so they cannot be listed up front. Defer write-back validation to the

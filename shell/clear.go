@@ -26,6 +26,7 @@ func (c CommandList) clearCommand(_ context.Context, s *Shell, argv []string) er
 	if s != nil && s.isTTY != nil && !s.isTTY() {
 		return nil
 	}
-	fmt.Fprint(config.Stdout, "\x1b[H\x1b[2J\x1b[3J")
+	//nolint:errcheck // Ignore error because clearing terminal screen is non-critical and stdout errors are handled globally.
+	_, _ = fmt.Fprint(config.Stdout, "\x1b[H\x1b[2J\x1b[3J")
 	return nil
 }

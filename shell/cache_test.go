@@ -73,8 +73,10 @@ func TestCache_InsideImportedDirectory(t *testing.T) {
 	// manifest must not have been imported as an extra table.
 	var tables string
 	warmErr := captureStderr(t, func() {
-		tables = runQuery(t, []string{"sqly", "--cache", cache, "--sql",
-			"SELECT group_concat(name, ',') AS t FROM sqlite_master WHERE type='table' ORDER BY name", dir})
+		tables = runQuery(t, []string{
+			"sqly", "--cache", cache, "--sql",
+			"SELECT group_concat(name, ',') AS t FROM sqlite_master WHERE type='table' ORDER BY name", dir,
+		})
 	})
 	if !strings.Contains(warmErr, "cache: reused") {
 		t.Errorf("second run should reuse the cache, stderr = %q", warmErr)

@@ -26,7 +26,7 @@ mkdir -p "${cov}/unit" "${cov}/e2e" "${cov}/merged"
 #    with the E2E covdata below. -covermode=atomic must match the binary build.
 echo ">> unit coverage -> ${cov}/unit"
 go test -count=1 -cover -covermode=atomic -coverpkg=./... ./... \
-	-args -test.gocoverdir="${cov}/unit"
+  -args -test.gocoverdir="${cov}/unit"
 
 # 2. Self-hosted E2E via a coverage-instrumented sqly. run_e2e.sh builds sqly
 #    with `go build -cover` when COVER is set and puts it first on PATH; atago

@@ -139,7 +139,8 @@ func (s *Shell) loadOrImport(ctx context.Context, paths []string) error {
 			return nil
 		}
 	} else {
-		fmt.Fprintf(config.Stderr, "cache: cannot read input metadata (%v); importing without cache\n", sigErr)
+		//nolint:errcheck // Ignore error because we are writing a diagnostic warning to stderr.
+		_, _ = fmt.Fprintf(config.Stderr, "cache: cannot read input metadata (%v); importing without cache\n", sigErr)
 	}
 
 	// Cold import.
@@ -299,7 +300,7 @@ func collectCacheSignatures(paths []string, skip func(string) bool, dirSupported
 // streams the file through the hash so memory use stays constant regardless of
 // file size.
 func hashFile(path string) (string, error) {
-	f, err := os.Open(path) //nolint:gosec // cache inputs are paths the user passed on the command line
+	f, err := os.Open(path) // #nosec G304 // cache inputs are paths the user passed on the command line
 	if err != nil {
 		return "", err
 	}
@@ -327,7 +328,7 @@ func cacheSignaturesMatch(a, b []cacheSource) bool {
 
 // readCacheManifest decodes a cache manifest from disk.
 func readCacheManifest(path string) (cacheManifest, error) {
-	data, err := os.ReadFile(path) //nolint:gosec // cache path chosen by the user
+	data, err := os.ReadFile(path) // #nosec G304 // cache path chosen by the user
 	if err != nil {
 		return cacheManifest{}, err
 	}

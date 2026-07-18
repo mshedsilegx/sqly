@@ -12,10 +12,10 @@ set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-if ! command -v atago >/dev/null 2>&1; then
-	echo "e2e: atago is not installed. Install it from https://github.com/nao1215/atago" >&2
-	echo "e2e: e.g. 'go install github.com/nao1215/atago@latest' (CI uses nao1215/setup-atago)" >&2
-	exit 127
+if ! command -v atago > /dev/null 2>&1; then
+  echo "e2e: atago is not installed. Install it from https://github.com/nao1215/atago" >&2
+  echo "e2e: e.g. 'go install github.com/nao1215/atago@latest' (CI uses nao1215/setup-atago)" >&2
+  exit 127
 fi
 
 # Build the binary the specs exercise; it is exposed on PATH below.
@@ -26,17 +26,17 @@ fi
 # GOCOVERDIR and write their runtime covdata there. The default (unset COVER)
 # path stays byte-for-byte identical, keeping `make test-e2e` fast.
 if [ -n "${COVER:-}" ]; then
-	: "${GOCOVERDIR:?COVER set but GOCOVERDIR is empty; export GOCOVERDIR to collect e2e coverage}"
-	# Mirror the Makefile's VERSION exactly (empty when no tags are reachable, e.g.
-	# on a shallow CI checkout) so `sqly --version` resolves the same way the plain
-	# `make build` binary does: an empty ldflag falls back to "(devel)".
-	VERSION="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-	env GO111MODULE=on CGO_ENABLED=0 \
-		go build -cover -covermode=atomic -coverpkg=./... \
-		-ldflags "-X github.com/nao1215/sqly/config.Version=${VERSION}" \
-		-o sqly main.go
+  : "${GOCOVERDIR:?COVER set but GOCOVERDIR is empty; export GOCOVERDIR to collect e2e coverage}"
+  # Mirror the Makefile's VERSION exactly (empty when no tags are reachable, e.g.
+  # on a shallow CI checkout) so `sqly --version` resolves the same way the plain
+  # `make build` binary does: an empty ldflag falls back to "(devel)".
+  VERSION="$(git describe --tags --abbrev=0 2> /dev/null || true)"
+  env GO111MODULE=on CGO_ENABLED=0 \
+    go build -cover -covermode=atomic -coverpkg=./... \
+    -ldflags "-X github.com/nao1215/sqly/config.Version=${VERSION}" \
+    -o sqly main.go
 else
-	make build
+  make build
 fi
 
 # Create an isolated sandbox and remove it on exit, so no run leaves state behind.
@@ -86,8 +86,8 @@ PTY_SPEC="$ROOT/e2e/atago/pty.atago.yaml"
 # Every spec except the pty one, collected so the parallel pass can skip it.
 NON_PTY_SPECS=""
 for spec in "$ROOT"/e2e/atago/*.atago.yaml; do
-	[ "$spec" = "$PTY_SPEC" ] && continue
-	NON_PTY_SPECS="$NON_PTY_SPECS $spec"
+  [ "$spec" = "$PTY_SPEC" ] && continue
+  NON_PTY_SPECS="$NON_PTY_SPECS $spec"
 done
 
 # shellcheck disable=SC2086 # intentional word splitting over the spec list
